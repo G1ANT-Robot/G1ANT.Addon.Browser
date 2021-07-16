@@ -8,6 +8,9 @@
 *
 */
 using G1ANT.Addon.Browser.Api;
+using G1ANT.Browser.Driver.Actions;
+using G1ANT.Browser.Driver.Data;
+using G1ANT.Chrome.Driver;
 using G1ANT.Language;
 using System;
 
@@ -35,7 +38,13 @@ namespace G1ANT.Addon.Browser
 
         public void Execute(Arguments arguments)
         {
-            throw new NotImplementedException();
+            NewTabAction action = new NewTabAction();
+            action.Timeout = (int)arguments.Timeout.Value.TotalMilliseconds;
+            action.Url = arguments.Url.Value;
+            action.NoWait = arguments.NoWait.Value;
+
+            ChromeClient client = new ChromeClient();
+            var tab = client.NewTab(action);
         }
     }
 }

@@ -7,6 +7,8 @@
 *    See License.txt file in the project root for full license information.
 *
 */
+using G1ANT.Browser.Driver.Actions;
+using G1ANT.Chrome.Driver;
 using G1ANT.Language;
 using System;
 
@@ -30,7 +32,13 @@ namespace G1ANT.Addon.Browser
         
         public void Execute(Arguments arguments)
         {
-            throw new NotImplementedException();
+            ActivateTabAction action = new ActivateTabAction();
+            action.Timeout = (int)arguments.Timeout.Value.TotalMilliseconds;
+            action.Search = arguments.Search.Value;
+            action.By = arguments.By.Value;
+
+            ChromeClient client = new ChromeClient();
+            var tab = client.ActivateTab(action);
         }
     }
 }

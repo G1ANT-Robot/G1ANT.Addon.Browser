@@ -1,0 +1,30 @@
+{
+	"name": "G1ANT.Extension",
+	"version": "1.0",
+	"manifest_version": 3,
+	"description": "G1ANT.Studio extension for browser interaction.",
+	"background": {
+		"service_worker": "background.js"
+	},
+	"content_scripts": [
+		{
+			"all_frames": true,
+			"js": [ "content.js", "content_cmds.js", "utils.js" ],
+			"matches": [ "*://*/*" ]
+		}
+	],
+	"permissions": [
+		"management",
+		"nativeMessaging",
+		"tabs",
+		"webNavigation",
+		"scripting"
+	],
+	"host_permissions": [
+		"*://*/*"
+	],
+	"content_security_policy": {
+		"script-src": "'self' 'unsafe-eval'",
+		"object-src": "self"
+	}
+}
