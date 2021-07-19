@@ -32,7 +32,17 @@ namespace G1ANT.Addon.Browser
 
         public void Execute(Arguments arguments)
         {
-            throw new NotImplementedException();
+            try
+            {
+                BrowserManager.CurrentWrapper.PressKey(
+                    arguments,
+                    arguments.Key.Value,
+                    arguments.Timeout.Value);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"Error occured while pressing key on element. Text: '{arguments.Key.Value}'. 'Search element phrase: '{arguments.Search.Value}', by: '{arguments.By.Value}'. Message: {ex.Message}", ex);
+            }
         }
     }
 }

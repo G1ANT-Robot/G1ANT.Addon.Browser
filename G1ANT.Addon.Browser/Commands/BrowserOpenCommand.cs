@@ -8,11 +8,7 @@
 *
 */
 using G1ANT.Addon.Browser.Api;
-using G1ANT.Browser.Driver.Actions;
-using G1ANT.Chrome.Driver;
 using G1ANT.Language;
-using System;
-using System.Collections.Generic;
 
 namespace G1ANT.Addon.Browser
 {
@@ -43,13 +39,17 @@ namespace G1ANT.Addon.Browser
 
         public void Execute(Arguments arguments)
         {
-            OpenAction action = new OpenAction();
-            action.Timeout = (int)arguments.Timeout.Value.TotalMilliseconds;
-            action.Url = arguments.Url.Value;
-            action.NoWait = arguments.NoWait.Value;
-
-            ChromeClient client = new ChromeClient();
-            var tab = client.Open(action);
+            var wrapper = BrowserManager.CreateWrapper(
+                arguments.Type.Value,
+                arguments.Url.Value,
+                arguments.Timeout.Value,
+                arguments.NoWait.Value);
+            int wrapperId = wrapper.Id;
+            OnScriptEnd = () =>
+            {
+                BrowserManager.RemoveWrapper(wrapperId);
+            };
+            Scripter.Variables.SetVariableValue(arguments.Result.Value, new IntegerStructure(wrapper.Id));
         }
     }
 }

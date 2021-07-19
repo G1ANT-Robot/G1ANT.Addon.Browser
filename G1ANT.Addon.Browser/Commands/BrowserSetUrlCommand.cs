@@ -36,7 +36,17 @@ namespace G1ANT.Addon.Browser
         
         public void Execute(Arguments arguments)
         {
-            throw new NotImplementedException();
+            try
+            {
+                BrowserManager.CurrentWrapper.SetUrl(
+                    arguments.Url.Value, 
+                    arguments.Timeout.Value, 
+                    arguments.NoWait.Value);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"Error occured while setting url on currently active browser instance. Url address: '{arguments.Url.Value}'. Message: {ex.Message}", ex);
+            }
         }
     }
 }

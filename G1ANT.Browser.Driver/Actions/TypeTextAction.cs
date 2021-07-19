@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace G1ANT.Browser.Driver.Actions
 {
     [DataContract]
-    public class TypeAction : SearchElementBase
+    public class TypeTextAction : SearchElementBase
     {
         [DataMember]
         public string Text = "";

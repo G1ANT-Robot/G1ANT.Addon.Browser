@@ -9,18 +9,33 @@ namespace G1ANT.Chrome.Host
 {
     class Program
     {
+        static Program()
+        {
+            SetAssemblyResolver();
+        }
+
         [STAThread]
         static void Main(string[] args)
         {
             var container = BuildContainer();
-            container.Resolve<ChromeService>().Run(args);
+            container.Resolve<ChromeHostWorker>().Run(args);
+        }
+
+        static void SetAssemblyResolver()
+        {
+            AppDomain.CurrentDomain.AssemblyResolve += ResourceAssemblyResolver.Resolve;
         }
 
         static IContainer BuildContainer()
         {
             var builder = new ContainerBuilder();
+            
+            builder.RegisterAssemblyModules(
+                typeof(ChromeClient).Assembly,
+                typeof(ChromiumHost).Assembly);
+            
             builder.RegisterType<ChromeEventsClient>();
-            builder.RegisterType<ChromeService>();
+            builder.RegisterType<ChromeHostWorker>();
             builder.RegisterType<ChromeServer<ChromeActionService>>()
                 .SingleInstance();
             builder.RegisterType<ChromeActionService>()

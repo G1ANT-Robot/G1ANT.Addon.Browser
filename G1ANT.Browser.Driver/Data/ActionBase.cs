@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
+using System;
 using System.Runtime.Serialization;
 
 namespace G1ANT.Browser.Driver.Data
@@ -22,13 +23,13 @@ namespace G1ANT.Browser.Driver.Data
     [KnownType(typeof(RefreshAction))]
     [KnownType(typeof(SetAttributeAction))]
     [KnownType(typeof(SetUrlAction))]
-    [KnownType(typeof(TypeAction))]
+    [KnownType(typeof(TypeTextAction))]
     public class ActionBase
     {
         protected const string NameSuffix = "Action";
 
         [DataMember]
-        public int Timeout = 6000;
+        public TimeSpan Timeout;
 
         public string CommandName
         {

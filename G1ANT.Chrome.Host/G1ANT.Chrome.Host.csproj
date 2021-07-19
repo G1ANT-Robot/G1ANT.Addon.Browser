@@ -41,9 +41,11 @@
   <ItemGroup>
     <Reference Include="Autofac, Version=4.9.4.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <HintPath>..\packages\Autofac.4.9.4\lib\net45\Autofac.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -58,9 +60,10 @@
   <ItemGroup>
     <Compile Include="ChromeActionService.cs" />
     <Compile Include="ChromeHost.cs" />
-    <Compile Include="ChromeService.cs" />
+    <Compile Include="ChromeHostWorker.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ResourceAssemblyResolver.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -73,15 +76,35 @@
     <ProjectReference Include="..\G1ANT.Browser.Driver\G1ANT.Browser.Driver.csproj">
       <Project>{657783f4-9b67-44ad-8fc3-eaf708290237}</Project>
       <Name>G1ANT.Browser.Driver</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\G1ANT.Chrome.Driver\G1ANT.Chrome.Driver.csproj">
       <Project>{CE42A179-B0FF-40F4-A7C6-0D775917ACD8}</Project>
       <Name>G1ANT.Chrome.Driver</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\G1ANT.Chromium.Host\G1ANT.Chromium.Host.csproj">
       <Project>{6E14C729-805A-4600-8570-729937DE93C6}</Project>
       <Name>G1ANT.Chromium.Host</Name>
+      <Private>False</Private>
     </ProjectReference>
+  </ItemGroup>
+    <ItemGroup>
+    <EmbeddedResource Include="..\packages\*\lib\net45\Autofac.dll">
+      <Link>Autofac.dll</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\packages\*\lib\net45\Newtonsoft.Json.dll">
+      <Link>Newtonsoft.Json.dll</Link>
+    </EmbeddedResource>
+	    <EmbeddedResource Include="..\G1ANT.Browser.Driver\bin\$(Configuration)\G1ANT.Browser.Driver.dll">
+      <Link>G1ANT.Browser.Driver.dll</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\G1ANT.Chrome.Driver\bin\$(Configuration)\G1ANT.Chrome.Driver.dll">
+      <Link>G1ANT.Chrome.Driver.dll</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\G1ANT.Chromium.Host\bin\$(Configuration)\G1ANT.Chromium.Host.dll">
+      <Link>G1ANT.Chromium.Host.dll</Link>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

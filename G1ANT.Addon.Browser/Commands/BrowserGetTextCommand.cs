@@ -32,7 +32,18 @@ namespace G1ANT.Addon.Browser
 
         public void Execute(Arguments arguments)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var attributeValue = BrowserManager.CurrentWrapper.GetTextValue(
+                    arguments,
+                    arguments.Timeout.Value);
+
+                Scripter.Variables.SetVariableValue(arguments.Result.Value, new TextStructure(attributeValue));
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"Search element phrase: '{arguments.Search.Value}', by: '{arguments.By.Value}'. Message: {ex.Message}", ex);
+            }
         }
     }
 }

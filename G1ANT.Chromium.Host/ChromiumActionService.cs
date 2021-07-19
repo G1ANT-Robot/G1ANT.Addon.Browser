@@ -3,6 +3,7 @@ using G1ANT.Browser.Driver.Interfaces;
 using G1ANT.Browser.Driver.Services;
 using G1ANT.Chromium.Host;
 using G1ANT.Chromium.Host.Data;
+using System;
 using System.Threading.Tasks;
 
 namespace G1ANT.Chrome.Host
@@ -23,7 +24,7 @@ namespace G1ANT.Chrome.Host
                 Command = "ping"
             };
             host.SendMessage(msg.ToJson());
-            var response = host.WaitForCommandResponse(msg.Id, 1000);
+            var response = host.WaitForCommandResponse(msg.Id, TimeSpan.FromSeconds(1));
             if (response == null)
             {
                 return false;

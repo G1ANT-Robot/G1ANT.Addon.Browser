@@ -20,6 +20,7 @@ namespace G1ANT.Chromium.Host
         private BlockingCollection<ChromiumCommandResponse> commandResponses = new BlockingCollection<ChromiumCommandResponse>();
         private AutoResetEvent messageReceived;
 
+        public abstract TimeSpan DefaultTimeout { get; }
         public abstract string Hostname { get; }
 
         public delegate void EventTriggeredHandler(ChromiumBrowserEvent browserEvent);
@@ -198,17 +199,17 @@ namespace G1ANT.Chromium.Host
             }
         }
 
-        public ChromiumCommandResponse WaitForCommandResponse(string id, int timeout = 60000)
+        public ChromiumCommandResponse WaitForCommandResponse(string id, TimeSpan? timeout = null)
         {
+            timeout = timeout ?? DefaultTimeout;
             long start = Environment.TickCount;
-
             do
             {
                 var response = commandResponses.FirstOrDefault(x => x.Id == id);
                 if (response != null)
                     return response;
             }
-            while (Math.Abs(Environment.TickCount - start) < timeout);
+            while (Math.Abs(Environment.TickCount - start) < timeout.Value.TotalMilliseconds);
             return null;
         }
 

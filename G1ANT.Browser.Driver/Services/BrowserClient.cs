@@ -14,17 +14,10 @@ namespace G1ANT.Browser.Driver.Services
         IBrowserDriver,
         IBrowserActionCallback
     {
-        static private DriverServer<BrowserEventsService, IBrowserEvents> s_eventsServer = null;
+        private TimeSpan defaultTimeout = TimeSpan.FromSeconds(2);
 
-        public BrowserEventsService EventService { get => s_eventsServer?.Service; }
-
-        public BrowserClient(DriverServer<BrowserEventsService, IBrowserEvents> eventsServer)
+        public BrowserClient()
         {
-            if (s_eventsServer == null)
-            {
-                s_eventsServer = eventsServer;
-                s_eventsServer.Start();
-            }
         }
 
         protected ActionResponse Execute(ActionBase command)
@@ -44,7 +37,7 @@ namespace G1ANT.Browser.Driver.Services
         {
             try
             {
-                var pipeProxy = CreateChannel(10000);
+                var pipeProxy = CreateChannel(defaultTimeout);
                 return pipeProxy.IsConnected();
             }
             catch (EndpointNotFoundException)
@@ -64,22 +57,7 @@ namespace G1ANT.Browser.Driver.Services
 
         protected abstract void OpenBrowserWithUrl(string url);
 
-        protected void StartBrowserExtension()
-        {
-            try
-            {
-                OpenBrowserWithUrl(@"file://mac/Home/Documents/G1ANT.Robot/Add-on/G1ANT.Addon.Browser.Reconnecting.Extension.html");
-            }
-            catch (TimeoutException ex)
-            {
-                if (!IsExtensionConnected())
-                    throw ex;
-            }
-            catch
-            {
-                throw;
-            }
-        }
+        protected abstract void StartBrowserExtension();
 
         public void CheckExtension()
         {
@@ -183,6 +161,16 @@ namespace G1ANT.Browser.Driver.Services
         {
             var result = ProcessAction(action);
             return JsonConvert.DeserializeObject<BrowserTab>(result);
+        }
+
+        public void TypeText(TypeTextAction action)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void PressKey(PressKeyAction action)
+        {
+            throw new NotImplementedException();
         }
     }
 }

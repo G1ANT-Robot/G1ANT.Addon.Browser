@@ -62,7 +62,7 @@
     <Compile Include="Data\ErrorResult.cs" />
     <Compile Include="Actions\SetAttributeAction.cs" />
     <Compile Include="Actions\SetUrlAction.cs" />
-    <Compile Include="Actions\TypeAction.cs" />
+    <Compile Include="Actions\TypeTextAction.cs" />
     <Compile Include="Interfaces\IBrowserAction.cs" />
     <Compile Include="Data\ActionBase.cs" />
     <Compile Include="Data\ActionResponse.cs" />
@@ -76,6 +76,7 @@
     <Compile Include="Services\BrowserClientBase.cs" />
     <Compile Include="Services\BrowserEventsClient.cs" />
     <Compile Include="Services\BrowserEventsService.cs" />
+    <Compile Include="Services\BrowserService.cs" />
     <Compile Include="Services\DriverServer.cs" />
     <Compile Include="Services\BrowserActionService.cs" />
   </ItemGroup>

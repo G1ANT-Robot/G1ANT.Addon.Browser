@@ -13,7 +13,7 @@ namespace G1ANT.Chrome.Driver
     {
         protected override string ServerName => Configuration.ServerName;
 
-        public ChromeClient() : base(new ChromeEventsServer(new BrowserEventsService()))
+        public ChromeClient() : base()
         {
         }
 
@@ -21,12 +21,11 @@ namespace G1ANT.Chrome.Driver
         protected override void OpenBrowserWithUrl(string url)
         {
             urlLoaded = false;
-            EventService.OnTabUpdated += TabUpdatedHandler;
+            ChromeService.Service.EventsService.OnTabUpdated += TabUpdatedHandler;
 
             Process.Start("chrome.exe", $"\"{url}\" --new-window");
 
             long start = Environment.TickCount;
-
             new Task(() => {
                 do
                 {
@@ -36,9 +35,25 @@ namespace G1ANT.Chrome.Driver
                 }
                 while (Math.Abs(Environment.TickCount - start) < 20000);
             }).RunSynchronously();
-
-            EventService.OnTabUpdated -= TabUpdatedHandler;
+            ChromeService.Service.EventsService.OnTabUpdated -= TabUpdatedHandler;
             throw new TimeoutException();
+        }
+
+        protected override void StartBrowserExtension()
+        {
+            try
+            {
+                OpenBrowserWithUrl(@"file://mac/Home/Documents/G1ANT.Robot/Add-on/G1ANT.Addon.Browser.Reconnecting.Extension.html");
+            }
+            catch (TimeoutException ex)
+            {
+                if (!IsExtensionConnected())
+                    throw ex;
+            }
+            catch
+            {
+                throw;
+            }
         }
 
         protected void TabUpdatedHandler(BrowserTab tab)

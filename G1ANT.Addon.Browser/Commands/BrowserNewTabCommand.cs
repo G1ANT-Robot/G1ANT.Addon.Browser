@@ -38,13 +38,17 @@ namespace G1ANT.Addon.Browser
 
         public void Execute(Arguments arguments)
         {
-            NewTabAction action = new NewTabAction();
-            action.Timeout = (int)arguments.Timeout.Value.TotalMilliseconds;
-            action.Url = arguments.Url.Value;
-            action.NoWait = arguments.NoWait.Value;
-
-            ChromeClient client = new ChromeClient();
-            var tab = client.NewTab(action);
+            try
+            {
+                BrowserManager.CurrentWrapper.NewTab(
+                    arguments.Url?.Value, 
+                    arguments.NoWait.Value, 
+                    arguments.Timeout.Value);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"Error occured while opening new tab. Url '{arguments.Url.Value}'. Message: {ex.Message}", ex);
+            }
         }
     }
 }

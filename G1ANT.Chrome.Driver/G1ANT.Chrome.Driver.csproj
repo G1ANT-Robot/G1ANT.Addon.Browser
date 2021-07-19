@@ -46,6 +46,7 @@
     <Compile Include="ChromeEventsClient.cs" />
     <Compile Include="ChromeEventsServer.cs" />
     <Compile Include="ChromeServer.cs" />
+    <Compile Include="ChromeService.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

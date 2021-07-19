@@ -3,12 +3,13 @@ using G1ANT.Chrome.Driver;
 using G1ANT.Chromium.Host;
 using G1ANT.Chromium.Host.Data;
 using System;
+using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
 
 namespace G1ANT.Chrome.Host
 {
-    public class ChromeService : ApplicationContext
+    public class ChromeHostWorker : ApplicationContext
     {
         private const string RegisterArgument = "register";
         private static readonly string[] HostAllowedOrigins = new string[] { "chrome-extension://iiojoficinkdiloplfipdjegidpebhfn/" };
@@ -18,7 +19,7 @@ namespace G1ANT.Chrome.Host
         protected readonly ChromeServer<ChromeActionService> server;
         protected readonly ChromeEventsClient eventsClient;
 
-        public ChromeService(
+        public ChromeHostWorker(
             ChromeHost host,
             ChromeServer<ChromeActionService> server,
             ChromeEventsClient eventsClient)
@@ -67,6 +68,10 @@ namespace G1ANT.Chrome.Host
             {
                 switch (browserEvent.Event)
                 {
+                    case "runtime.onStartup":
+                        break;
+                    case "runtime.onSuspend":
+                        break;
                     case "extension.connected":
                         eventsClient.ExtensionConnected();
                         break;

@@ -7,6 +7,7 @@
 *    See License.txt file in the project root for full license information.
 *
 */
+using G1ANT.Addon.Browser.Api;
 using G1ANT.Language;
 using System;
 
@@ -27,7 +28,17 @@ namespace G1ANT.Addon.Browser
 
         public void Execute(Arguments arguments)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var activeTab = BrowserManager.CurrentWrapper.GetActiveTab(
+                    arguments.Timeout.Value);
+
+                Scripter.Variables.SetVariableValue(arguments.Result.Value, new TextStructure(activeTab.Url));
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"Error occured while getting Url of currently active browser instance. Message: {ex.Message}", ex);
+            }
         }
     }
 }
