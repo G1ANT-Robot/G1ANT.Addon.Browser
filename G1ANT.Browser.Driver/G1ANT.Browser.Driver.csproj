@@ -49,9 +49,11 @@
     <Compile Include="Actions\ActivateTabAction.cs" />
     <Compile Include="Actions\ClickAction.cs" />
     <Compile Include="Actions\CloseTabAction.cs" />
+    <Compile Include="Actions\FindTabAction.cs" />
     <Compile Include="Actions\GetActiveTabAction.cs" />
     <Compile Include="Actions\GetAttributeAction.cs" />
     <Compile Include="Actions\GetHtmlAction.cs" />
+    <Compile Include="Actions\GetInnerHtmlAction.cs" />
     <Compile Include="Actions\GetOuterHtmlAction.cs" />
     <Compile Include="Actions\GetTableAction.cs" />
     <Compile Include="Actions\GetTextAction.cs" />
@@ -63,11 +65,12 @@
     <Compile Include="Actions\SetAttributeAction.cs" />
     <Compile Include="Actions\SetUrlAction.cs" />
     <Compile Include="Actions\TypeTextAction.cs" />
+    <Compile Include="Data\ValueModel.cs" />
     <Compile Include="Interfaces\IBrowserAction.cs" />
     <Compile Include="Data\ActionBase.cs" />
     <Compile Include="Data\ActionResponse.cs" />
     <Compile Include="Actions\NewTabAction.cs" />
-    <Compile Include="Data\SearchElementBase.cs" />
+    <Compile Include="Data\SearchCriteriaBase.cs" />
     <Compile Include="Extensions\TypeExtension.cs" />
     <Compile Include="Interfaces\IBrowserDriver.cs" />
     <Compile Include="Interfaces\IBrowserEvents.cs" />

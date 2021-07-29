@@ -8,17 +8,20 @@ using System.Runtime.Serialization;
 namespace G1ANT.Browser.Driver.Data
 {
     [DataContract]
-    [KnownType(typeof(SearchElementBase))]
+    [KnownType(typeof(SearchCriteriaBase))]
     [KnownType(typeof(ActivateTabAction))]
+    [KnownType(typeof(FindTabAction))]
     [KnownType(typeof(ClickAction))]
     [KnownType(typeof(CloseTabAction))]
     [KnownType(typeof(GetActiveTabAction))]
     [KnownType(typeof(GetAttributeAction))]
     [KnownType(typeof(GetHtmlAction))]
+    [KnownType(typeof(GetInnerHtmlAction))]
     [KnownType(typeof(GetOuterHtmlAction))]
     [KnownType(typeof(GetTableAction))]
     [KnownType(typeof(GetTextAction))]
     [KnownType(typeof(NewTabAction))]
+    [KnownType(typeof(OpenAction))]
     [KnownType(typeof(PressKeyAction))]
     [KnownType(typeof(RefreshAction))]
     [KnownType(typeof(SetAttributeAction))]
@@ -29,7 +32,7 @@ namespace G1ANT.Browser.Driver.Data
         protected const string NameSuffix = "Action";
 
         [DataMember]
-        public TimeSpan Timeout;
+        public TimeSpan Timeout = TimeSpan.FromSeconds(1);
 
         public string CommandName
         {
@@ -49,12 +52,12 @@ namespace G1ANT.Browser.Driver.Data
 
         public string ToJson()
         {
-            return JsonConvert.SerializeObject(this, JsonSerializerSettings);
+            return JsonConvert.SerializeObject(this);
         }
 
         public JObject ToJObject()
         {
-            return JObject.FromObject(this, JsonSerializer.Create(JsonSerializerSettings));
+            return JObject.FromObject(this);
         }
     }
 }

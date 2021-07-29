@@ -5,21 +5,21 @@ namespace G1ANT.Chrome.Driver
     public class ChromeService : BrowserService
     {
         private static ChromeService _chromeService;
-        public static ChromeService Service
+        public static ChromeService CreateService()
         {
-            get 
-            {
-                _chromeService = _chromeService ?? new ChromeService();
-                return _chromeService;
-            }
+            _chromeService = _chromeService ?? new ChromeService();
+            return _chromeService;
         }
 
         private ChromeEventsServer eventsServer;
+
+        public string StartingExtensionHtmlUrl { get; set; }
 
         private ChromeService()
         {
             EventsService = new BrowserEventsService();
             eventsServer = new ChromeEventsServer(EventsService);
+            eventsServer.Start();
         }
     }
 }

@@ -1,14 +1,14 @@
 chrome = (chrome && chrome.i18n && chrome) || (browser && browser.i18n && browser);
 
-chrome.runtime.onMessage.addListener(function (msg, sender, responseCallback) {
+chrome.runtime.onMessage.addListener(function (message, sender, responseCallback) {
 	if (sender.tab) {
-		console.log("message from content script, msg=" + msg);
+		console.log("message from content script, msg=" + message);
 	}
 	else {
-		if (msg.command !== undefined) {
-			var command = g1ContentCommands[msg.command];
+		if (message.Command !== undefined) {
+			var command = g1ContentCommands[message.Command];
 			if (command !== undefined) {
-				command(msg.args, responseCallback);
+				command(message.Args, responseCallback);
 			}
 			else {
 				responseCallback(false, { "error": "Command is not implemented" });

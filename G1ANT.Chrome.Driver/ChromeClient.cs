@@ -3,6 +3,7 @@ using G1ANT.Browser.Driver.Data;
 using G1ANT.Browser.Driver.Services;
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -13,17 +14,17 @@ namespace G1ANT.Chrome.Driver
     {
         protected override string ServerName => Configuration.ServerName;
 
-        public ChromeClient() : base()
+        public ChromeClient(BrowserService browserService) : base(browserService)
         {
         }
 
         private bool urlLoaded = false;
-        protected override void OpenBrowserWithUrl(string url)
+        public override void OpenBrowserWithUrl(string url, string extraArguments = "")
         {
             urlLoaded = false;
-            ChromeService.Service.EventsService.OnTabUpdated += TabUpdatedHandler;
+            BrowserService.EventsService.OnTabUpdated += TabUpdatedHandler;
 
-            Process.Start("chrome.exe", $"\"{url}\" --new-window");
+            Process.Start("chrome.exe", $"\"{url}\" {extraArguments}");
 
             long start = Environment.TickCount;
             new Task(() => {
@@ -35,25 +36,9 @@ namespace G1ANT.Chrome.Driver
                 }
                 while (Math.Abs(Environment.TickCount - start) < 20000);
             }).RunSynchronously();
-            ChromeService.Service.EventsService.OnTabUpdated -= TabUpdatedHandler;
-            throw new TimeoutException();
-        }
-
-        protected override void StartBrowserExtension()
-        {
-            try
-            {
-                OpenBrowserWithUrl(@"file://mac/Home/Documents/G1ANT.Robot/Add-on/G1ANT.Addon.Browser.Reconnecting.Extension.html");
-            }
-            catch (TimeoutException ex)
-            {
-                if (!IsExtensionConnected())
-                    throw ex;
-            }
-            catch
-            {
-                throw;
-            }
+            BrowserService.EventsService.OnTabUpdated -= TabUpdatedHandler;
+            if (!urlLoaded)
+                throw new TimeoutException();
         }
 
         protected void TabUpdatedHandler(BrowserTab tab)
@@ -64,11 +49,19 @@ namespace G1ANT.Chrome.Driver
 
         public override BrowserTab Open(OpenAction action)
         {
-            CheckExtension();
+            using (var checker = CreateExtensionChecker())
+            {
+                OpenBrowserWithUrl(action.Url, ChromeArguments.NewWindwow);
+                return null;
+            }
+        }
 
-            OpenBrowserWithUrl(action.Url);
+        protected override IDisposable CreateExtensionChecker()
+        {
+            if (IsExtensionConnected())
+                return null;
 
-            return null;
+            return new ChromeExtensionChecker(this);
         }
     }
 }

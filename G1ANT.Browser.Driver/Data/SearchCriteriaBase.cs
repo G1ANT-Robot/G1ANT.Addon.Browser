@@ -3,7 +3,7 @@
 namespace G1ANT.Browser.Driver.Data
 {
     [DataContract]
-    abstract public class SearchElementBase : ActionBase
+    abstract public class SearchCriteriaBase : ActionBase
     {
         [DataMember]
         public string Search = "";

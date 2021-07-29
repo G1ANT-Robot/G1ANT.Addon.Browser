@@ -89,14 +89,14 @@
       <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
-    <ItemGroup>
+  <ItemGroup>
     <EmbeddedResource Include="..\packages\*\lib\net45\Autofac.dll">
       <Link>Autofac.dll</Link>
     </EmbeddedResource>
     <EmbeddedResource Include="..\packages\*\lib\net45\Newtonsoft.Json.dll">
       <Link>Newtonsoft.Json.dll</Link>
     </EmbeddedResource>
-	    <EmbeddedResource Include="..\G1ANT.Browser.Driver\bin\$(Configuration)\G1ANT.Browser.Driver.dll">
+    <EmbeddedResource Include="..\G1ANT.Browser.Driver\bin\$(Configuration)\G1ANT.Browser.Driver.dll">
       <Link>G1ANT.Browser.Driver.dll</Link>
     </EmbeddedResource>
     <EmbeddedResource Include="..\G1ANT.Chrome.Driver\bin\$(Configuration)\G1ANT.Chrome.Driver.dll">

@@ -9,7 +9,7 @@ namespace G1ANT.Chrome.Host
     {
         public override string Hostname => "com.g1ant.chromium.messaging";
 
-        public override TimeSpan DefaultTimeout { get => ChromeService.Service.DefaultTimeout; }
+        public override TimeSpan DefaultTimeout { get => TimeSpan.FromSeconds(5); }
 
         public ChromeHost() : base(false)
         {

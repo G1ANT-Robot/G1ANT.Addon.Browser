@@ -69,6 +69,7 @@
     <Compile Include="Api\BrowserManager.cs" />
     <Compile Include="Api\BrowserSettings.cs" />
     <Compile Include="Api\BrowserWrapper.cs" />
+    <Compile Include="Api\Utils.cs" />
     <Compile Include="BrowserAddon.cs" />
     <Compile Include="Commands\BrowserActivateTabCommand.cs" />
     <Compile Include="Commands\BrowserClickCommand.cs" />
@@ -130,6 +131,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="..\G1ANT.Chrome.Host\bin\$(Configuration)\G1ANT.Chrome.Host.exe">
       <Link>G1ANT.Chrome.Host.exe</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include=".\G1ANT.Addon.Browser.Starting.Extension.html">
+      <Link>G1ANT.Addon.Browser.Starting.Extension.html</Link>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

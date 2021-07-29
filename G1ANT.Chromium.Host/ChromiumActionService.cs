@@ -61,7 +61,7 @@ namespace G1ANT.Chrome.Host
                 var msg = CallCommand(command);
                 var response = host.WaitForCommandResponse(msg.Id, command.Timeout);
                 result.Succeedded = response != null ? response.Succeeded : false;
-                result.JsonData = response != null ? response.Data.ToString() : null;
+                result.JsonData = response?.Data?.ToString();
             }
             else
             {
@@ -81,7 +81,7 @@ namespace G1ANT.Chrome.Host
                     var result = new ActionResponse()
                     {
                         Succeedded = response != null ? response.Succeeded : false,
-                        JsonData = response != null ? response.Data.ToString() : null
+                        JsonData = response?.Data?.ToString()
                     };
                     callback.CommandFinished(result);
                 });

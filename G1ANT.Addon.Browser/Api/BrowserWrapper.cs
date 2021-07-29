@@ -57,7 +57,7 @@ namespace G1ANT.Addon.Browser.Api
             {
                 Timeout = timeout
             };
-            driver.Close(action);
+            driver.CloseTab(action);
         }
 
         public void NewTab(string url, bool noWait, TimeSpan timeout)
@@ -153,7 +153,13 @@ namespace G1ANT.Addon.Browser.Api
 
         public string GetInnerHtml(BrowserCommandArguments search, TimeSpan timeout)
         {
-            throw new NotImplementedException();
+            var action = new GetInnerHtmlAction()
+            {
+                Search = search.Search.Value,
+                By = search.By.Value,
+                Timeout = timeout
+            };
+            return driver.GetInnerHtml(action);
         }
 
         public string GetOuterHtml(BrowserCommandArguments search, TimeSpan timeout)

@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace G1ANT.Browser.Driver.Actions
 {
     [DataContract]
-    public class ClickAction : SearchElementBase
+    public class ClickAction : SearchCriteriaBase
     {
         [DataMember]
         public bool WaitForNewWindow = false;

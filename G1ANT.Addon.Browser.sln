@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 16.0.31321.278
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "G1ANT.Addon.Browser", "G1ANT.Addon.Browser\G1ANT.Addon.Browser.csproj", "{5CB59F51-7F27-4612-B240-06FFC108B924}"
+	ProjectSection(ProjectDependencies) = postProject
+		{16DC44B2-E399-4BFC-87C8-8FBC9A0A9726} = {16DC44B2-E399-4BFC-87C8-8FBC9A0A9726}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "G1ANT.Chrome.Host", "G1ANT.Chrome.Host\G1ANT.Chrome.Host.csproj", "{16DC44B2-E399-4BFC-87C8-8FBC9A0A9726}"
 EndProject
@@ -13,6 +16,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "G1ANT.Chromium.Extension", 
 	ProjectSection(SolutionItems) = preProject
 		G1ANT.Chromium.Extension\background.js = G1ANT.Chromium.Extension\background.js
 		G1ANT.Chromium.Extension\background_cmds.js = G1ANT.Chromium.Extension\background_cmds.js
+		G1ANT.Chromium.Extension\config.js = G1ANT.Chromium.Extension\config.js
 		G1ANT.Chromium.Extension\content.js = G1ANT.Chromium.Extension\content.js
 		G1ANT.Chromium.Extension\content_cmds.js = G1ANT.Chromium.Extension\content_cmds.js
 		G1ANT.Chromium.Extension\manifest.json = G1ANT.Chromium.Extension\manifest.json

@@ -1,11 +1,9 @@
 ﻿using G1ANT.Browser.Driver.Data;
 using System;
 using System.ServiceModel;
-using G1ANT.Browser.Driver.Extensions;
 using G1ANT.Browser.Driver.Interfaces;
 using G1ANT.Browser.Driver.Actions;
 using Newtonsoft.Json;
-using System.Threading;
 
 namespace G1ANT.Browser.Driver.Services
 {
@@ -14,15 +12,18 @@ namespace G1ANT.Browser.Driver.Services
         IBrowserDriver,
         IBrowserActionCallback
     {
-        private TimeSpan defaultTimeout = TimeSpan.FromSeconds(2);
+        private TimeSpan defaultTimeout = TimeSpan.FromSeconds(5);
 
-        public BrowserClient()
+        public BrowserService BrowserService { get; }
+
+        public BrowserClient(BrowserService browserService)
         {
+            BrowserService = browserService;
         }
 
         protected ActionResponse Execute(ActionBase command)
         {
-            var pipeProxy = CreateChannel(command.Timeout);
+            var pipeProxy = CreateChannel(command.Timeout.TotalMilliseconds > 0 ? command.Timeout : BrowserService.DefaultTimeout);
             var response = pipeProxy.Execute(command);
             return response;
         }
@@ -55,44 +56,39 @@ namespace G1ANT.Browser.Driver.Services
             throw new NotImplementedException();
         }
 
-        protected abstract void OpenBrowserWithUrl(string url);
+        public abstract void OpenBrowserWithUrl(string url, string extraArguments = "");
 
-        protected abstract void StartBrowserExtension();
-
-        public void CheckExtension()
+        protected virtual IDisposable CreateExtensionChecker()
         {
-            if (!IsExtensionConnected())
-            {
-                StartBrowserExtension();
-            }
+            return null;
         }
 
         protected string ProcessAction(ActionBase action)
         {
-            try
+            using (var checker = CreateExtensionChecker())
             {
-                CheckExtension();
-                var response = Execute(action);
-                if (response.Succeedded)
-                    return response.JsonData;
                 try
                 {
-                    var data = JsonConvert.DeserializeObject<ErrorResult>(response.JsonData);
-                    throw new Exception(data.Error);
+                    var response = Execute(action);
+                    if (response.Succeedded)
+                        return response.JsonData;
+
+                    if (response.JsonData != null)
+                    {
+                        var data = JsonConvert.DeserializeObject<ErrorResult>(response.JsonData);
+                        throw new Exception(data.Error);
+                    }
+                    else
+                        throw new SystemException();
+                }
+                catch (EndpointNotFoundException)
+                {
+                    return ProcessAction(action);
                 }
                 catch
                 {
-                    throw new SystemException();
+                    throw;
                 }
-            }
-            catch (EndpointNotFoundException)
-            {
-                StartBrowserExtension();
-                return ProcessAction(action);
-            }
-            catch
-            {
-                throw;
             }
         }
 
@@ -102,14 +98,20 @@ namespace G1ANT.Browser.Driver.Services
             return JsonConvert.DeserializeObject<BrowserTab>(result);
         }
 
-        public void Click(ClickAction action)
+        public BrowserTab FindTab(FindTabAction action)
         {
-            throw new NotImplementedException();
+            var result = ProcessAction(action);
+            return JsonConvert.DeserializeObject<BrowserTab>(result);
         }
 
-        public void Close(CloseTabAction action)
+        public void Click(ClickAction action)
         {
-            throw new NotImplementedException();
+            ProcessAction(action);
+        }
+
+        public void CloseTab(CloseTabAction action)
+        {
+            ProcessAction(action);
         }
 
         public BrowserTab GetActiveTab(GetActiveTabAction action)
@@ -120,22 +122,37 @@ namespace G1ANT.Browser.Driver.Services
 
         public string GetAttribute(GetAttributeAction action)
         {
-            throw new NotImplementedException();
+            var result = ProcessAction(action);
+            var model = JsonConvert.DeserializeObject<ValueModel>(result);
+            return model.Value;
         }
 
         public string GetHtml(GetHtmlAction action)
         {
-            throw new NotImplementedException();
+            var result = ProcessAction(action);
+            var model = JsonConvert.DeserializeObject<ValueModel>(result);
+            return model.Value;
         }
 
         public string GetOuterHtml(GetOuterHtmlAction action)
         {
-            throw new NotImplementedException();
+            var result = ProcessAction(action);
+            var model = JsonConvert.DeserializeObject<ValueModel>(result);
+            return model.Value;
+        }
+
+        public string GetInnerHtml(GetInnerHtmlAction action)
+        {
+            var result = ProcessAction(action);
+            var model = JsonConvert.DeserializeObject<ValueModel>(result);
+            return model.Value;
         }
 
         public string GetText(GetTextAction action)
         {
-            throw new NotImplementedException();
+            var result = ProcessAction(action);
+            var model = JsonConvert.DeserializeObject<ValueModel>(result);
+            return model.Value;
         }
 
         public BrowserTab NewTab(NewTabAction action)
@@ -154,7 +171,7 @@ namespace G1ANT.Browser.Driver.Services
 
         public void SetAttribute(SetAttributeAction action)
         {
-            throw new NotImplementedException();
+            ProcessAction(action);
         }
 
         public BrowserTab SetUrl(SetUrlAction action)
@@ -165,12 +182,12 @@ namespace G1ANT.Browser.Driver.Services
 
         public void TypeText(TypeTextAction action)
         {
-            throw new NotImplementedException();
+            ProcessAction(action);
         }
 
         public void PressKey(PressKeyAction action)
         {
-            throw new NotImplementedException();
+            ProcessAction(action);
         }
     }
 }

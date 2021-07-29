@@ -1,7 +1,7 @@
 
 chrome = (chrome && chrome.i18n && chrome) || (browser && browser.i18n && browser);
 
-importScripts("background_cmds.js", "utils.js");
+importScripts("background_cmds.js", "utils.js", "config.js");
 
 chrome.runtime.onInstalled.addListener(({ reason, version }) => {
 	if (reason === chrome.runtime.OnInstalledReason.INSTALL) {
@@ -32,12 +32,16 @@ chrome.tabs.onUpdated.addListener((tabid, changeinfo, tab) => {
 });
 
 let nativeMessaging = function() {
-	let hostName = "com.g1ant.chromium.messaging";
-	port = chrome.runtime.connectNative(hostName);
-	port.onMessage.addListener(onNativeMessage);
-	port.onDisconnect.addListener(onDisconnected);
-	console.info("Connection to " + hostName + " has been established");
-	SendBrowserEvent("extension.connected", null);
+
+	Connect();
+
+	function Connect() {
+		port = chrome.runtime.connectNative(g1antMessagingHostName);
+		port.onMessage.addListener(onNativeMessage);
+		port.onDisconnect.addListener(onDisconnected);
+		console.info("Connection to " + g1antMessagingHostName + " has been established");
+		SendBrowserEvent("extension.connected", null);
+    }
 
 	function onNativeMessage(message) {
 		console.info("Received message: " + JSON.stringify(message));
@@ -47,8 +51,9 @@ let nativeMessaging = function() {
 	
 	function onDisconnected() {
 		console.error("Disconnected: " + chrome.runtime.lastError.message);
-		SendBrowserEvent("extension.disconnected", null);
 		port = null;
+
+		Connect();
 	}
 
 	function SendMessage(message, data) {
@@ -60,9 +65,10 @@ let nativeMessaging = function() {
 
 	function SendBrowserEvent(eventName, data) {
 		SendMessage("browserEvent", {
-			"event": eventName,
-			"data": data
+			"Event": eventName,
+			"Data": data
 		});
+		console.log("nativeMessaging.SendBrowserEvent: " + eventName);
 	}
 
 	return {

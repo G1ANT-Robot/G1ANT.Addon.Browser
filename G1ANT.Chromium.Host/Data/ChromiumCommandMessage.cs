@@ -13,9 +13,7 @@ namespace G1ANT.Chromium.Host.Data
 
         public string ToJson()
         {
-            var serializerSettings = new JsonSerializerSettings();
-            serializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-            return JsonConvert.SerializeObject(this, serializerSettings);
+            return JsonConvert.SerializeObject(this);
         }
     }
 }

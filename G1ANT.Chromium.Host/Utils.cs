@@ -8,17 +8,17 @@ namespace G1ANT.Chromium.Host
     {
         static public string AssemblyLoadDirectory()
         {
-            string codeBase = Assembly.GetEntryAssembly().CodeBase;
-            UriBuilder uri = new UriBuilder(codeBase);
-            string path = Uri.UnescapeDataString(uri.Path);
+            var codeBase = Assembly.GetEntryAssembly().CodeBase;
+            var uri = new Uri(codeBase);
+            var path = Uri.UnescapeDataString(uri.LocalPath);
             return Path.GetDirectoryName(path);
         }
 
         static public string AssemblyExecutablePath()
         {
-            string codeBase = Assembly.GetEntryAssembly().CodeBase;
-            UriBuilder uri = new UriBuilder(codeBase);
-            return Uri.UnescapeDataString(uri.Path);
+            var codeBase = Assembly.GetEntryAssembly().CodeBase;
+            var uri = new Uri(codeBase);
+            return Uri.UnescapeDataString(uri.LocalPath);
         }
     }
 }

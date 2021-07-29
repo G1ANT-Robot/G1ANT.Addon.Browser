@@ -36,9 +36,13 @@ function NormalizeUrl(link) {
 }
 
 function GetErrorResult(errorMsg) {
-	return { "error": errorMsg };
+	return { "Error": errorMsg };
 }
 
 function GetTabResult(tab) {
-	return { "id": tab.id, "url": tab.url, "title": tab.title, "status": tab.status };
+	return { "Id": tab.id, "Url": tab.url, "Title": tab.title, "Status": tab.status };
+}
+
+function GetValueResult(value) {
+	return { "Value": value };
 }

@@ -13,6 +13,7 @@ using System.Diagnostics;
 using System.IO;
 using G1ANT.Language;
 using System.Reflection;
+using G1ANT.Addon.Browser.Api;
 
 namespace G1ANT.Addon.Browser
 {
@@ -25,34 +26,34 @@ namespace G1ANT.Addon.Browser
     {
         public override void LoadDlls()
         {
-            UnpackDrivers();
+            UnpackFiles();
+            UnpackBrowserHosts();
             base.LoadDlls();
         }
 
-        private void UnpackDrivers()
+        private void UnpackFiles()
+        {
+        }
+
+        private void UnpackBrowserHosts()
         {
             var unpackFolder = AbstractSettingsContainer.Instance.UserDocsAddonFolder.FullName;
-            var embeddedResources = new List<string>()
+            var embeddedHosts = new List<string>()
             {
                 { "G1ANT.Chrome.Host.exe" },
             };
             var containingAssemblyName = typeof(BrowserAddon).Assembly.GetName().Name;
-            foreach (var embededResource in embeddedResources)
+            foreach (var hostName in embeddedHosts)
             {
                 try
                 {
-                    var fullResourceName = $"{containingAssemblyName}.{embededResource}";
-                    KillWorkingProcess(Path.GetFileNameWithoutExtension(embededResource));
-                    using (FileStream stream = File.Create(Path.Combine(unpackFolder, embededResource)))
+                    var fullResourceName = $"{containingAssemblyName}.{hostName}";
+                    var hostPath = Path.Combine(unpackFolder, hostName);
+                    if (IsUpdateNeeded(hostPath, fullResourceName))
                     {
-                        using (var io = Assembly.GetExecutingAssembly().GetManifestResourceStream(fullResourceName))
-                        {
-                            using (BinaryReader binaryReader = new BinaryReader(io))
-                            {
-                                var data = binaryReader.ReadBytes((int)io.Length);
-                                stream.Write(data, 0, data.Length);
-                            }
-                        }
+                        KillWorkingProcess(Path.GetFileNameWithoutExtension(hostName));
+                        Utils.SaveResourceToFile(hostPath, fullResourceName);
+                        Process.Start(hostPath, "-register");
                     }
                 }
                 catch (Exception ex)
@@ -60,6 +61,25 @@ namespace G1ANT.Addon.Browser
                     throw;
                 }
             }
+        }
+
+        private bool IsUpdateNeeded(string currentFilePath, string newFileResourceName)
+        {
+            if (!File.Exists(currentFilePath))
+                return true;
+
+            var currentVersion = new Version(FileVersionInfo.GetVersionInfo(currentFilePath).FileVersion);
+            var newVersion = new Version(GetResourceVersion(newFileResourceName).FileVersion);
+            return currentVersion < newVersion;
+        }
+
+        private FileVersionInfo GetResourceVersion(string resourceName)
+        {
+            var tmpFilename = Path.GetTempFileName();
+            Utils.SaveResourceToFile(tmpFilename, resourceName);
+            var version = FileVersionInfo.GetVersionInfo(tmpFilename);
+            File.Delete(tmpFilename);
+            return version;
         }
 
         private void KillWorkingProcess(string processName)
@@ -71,9 +91,7 @@ namespace G1ANT.Addon.Browser
                     proc.Kill();
                 }
                 catch
-                {
-
-                }
+                { }
             }
         }
 

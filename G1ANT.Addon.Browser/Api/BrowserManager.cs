@@ -1,7 +1,9 @@
 ﻿using G1ANT.Browser.Driver.Interfaces;
 using G1ANT.Chrome.Driver;
+using G1ANT.Language;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,6 +31,24 @@ namespace G1ANT.Addon.Browser.Api
 
         private static List<BrowserWrapper> wrappers = new List<BrowserWrapper>();
 
+        private static string GetStartingExtensionHtmlPath()
+        {
+            var unpackFolder = AbstractSettingsContainer.Instance.UserDocsAddonFolder.FullName;
+            var htmlFileName = "G1ANT.Addon.Browser.Starting.Extension.html";
+            var containingAssemblyName = typeof(BrowserAddon).Assembly.GetName().Name;
+            try
+            {
+                var fullResourceName = $"{containingAssemblyName}.{htmlFileName}";
+                var fullPath = Path.Combine(unpackFolder, htmlFileName);
+                Utils.SaveResourceToFile(fullPath, fullResourceName);
+                return fullPath;
+            }
+            catch (Exception ex)
+            {
+                return "";
+            }
+        }
+
         private static IBrowserDriver GetBrowserDriver(string webBrowserName)
         {
             switch (webBrowserName.ToLower())
@@ -39,8 +59,9 @@ namespace G1ANT.Addon.Browser.Api
                     break;
                 case "chrome":
                     {
-                        var driverService = ChromeService.Service;
-                        return new ChromeClient();
+                        var driverService = ChromeService.CreateService();
+                        driverService.StartingExtensionHtmlUrl = GetStartingExtensionHtmlPath();
+                        return new ChromeClient(driverService);
                     }
                 case "firefox":
                 case "ff":

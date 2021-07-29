@@ -95,7 +95,7 @@ namespace G1ANT.Chrome.Host
         protected void RegisterHost()
         {
             ChromeHost host = new ChromeHost();
-            host.GenerateManifest(HostDescription, HostAllowedOrigins);
+            host.GenerateManifest(HostDescription, HostAllowedOrigins, true);
             host.Register();
         }
 

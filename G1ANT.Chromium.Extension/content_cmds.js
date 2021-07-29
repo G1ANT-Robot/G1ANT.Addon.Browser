@@ -7,7 +7,7 @@ function FindElement(search, by, responseCallback) {
 			element = document.getElementById(search);
 			break;
 		case "class":
-		case "quert":
+		case "query":
 			element = GetElementsByXpath("//*[@class='" + search + "']").singleNodeValue;
 			break;
 		case "cssselector":
@@ -39,7 +39,7 @@ function GetElementsByXpath(path) {
 }
 
 g1ContentCommands["click"] = function(args, responseCallback) {
-	var element = FindElement(args.search, args.by);
+	var element = FindElement(args.Search, args.By);
 	if (element !== null) {
 		element.click();
 		responseCallback(true, null);
@@ -47,38 +47,46 @@ g1ContentCommands["click"] = function(args, responseCallback) {
 };
 
 g1ContentCommands["getattribute"] = function(args, responseCallback) {
-	var element = FindElement(args.search, args.by);
+	var element = FindElement(args.Search, args.By);
 	if (element !== null) {
-		var val = element.getAttribute(args.name);
-		responseCallback(true, { "value": val });
+		var val = element.getAttribute(args.Name);
+		responseCallback(true, GetValueResult(val));
 	} 
 }
 
 g1ContentCommands["setattribute"] = function (args, responseCallback) {
-	var element = FindElement(args.search, args.by);
+	var element = FindElement(args.Search, args.By);
 	if (element !== null) {
-		var val = element.setAttribute(args.name, args.value);
+		var val = element.setAttribute(args.Name, args.Value);
 		responseCallback(true, null);
 	}
 }
 
 g1ContentCommands["gethtml"] = function(args, responseCallback) {
 	var html = document.documentElement.outerHTML;
-	responseCallback(true, { "value": html });
+	responseCallback(true, GetValueResult(html));
 }
 
 g1ContentCommands["getouterhtml"] = function(args, responseCallback) {
-	var element = FindElement(args.search, args.by);
+	var element = FindElement(args.Search, args.By);
 	if (element !== null) {
 		var html = element.outerHTML;
-		responseCallback(true, { "value": html });
+		responseCallback(true, GetValueResult(html));
 	} 
 }
 
+g1ContentCommands["getinnerhtml"] = function (args, responseCallback) {
+	var element = FindElement(args.Search, args.By);
+	if (element !== null) {
+		var html = element.innerHTML;
+		responseCallback(true, GetValueResult(html));
+	}
+}
+
 g1ContentCommands["gettext"] = function(args, responseCallback) {
-	var element = FindElement(args.search, args.by);
+	var element = FindElement(args.Search, args.By);
 	if (element !== null) {
 		var text = element.innerText;
-		responseCallback(true, { "value": text });
+		responseCallback(true, GetValueResult(text));
 	} 
 }
