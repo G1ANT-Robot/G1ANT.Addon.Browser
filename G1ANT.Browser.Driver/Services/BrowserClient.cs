@@ -12,8 +12,6 @@ namespace G1ANT.Browser.Driver.Services
         IBrowserDriver,
         IBrowserActionCallback
     {
-        private TimeSpan defaultTimeout = TimeSpan.FromSeconds(5);
-
         public BrowserService BrowserService { get; }
 
         public BrowserClient(BrowserService browserService)
@@ -23,7 +21,9 @@ namespace G1ANT.Browser.Driver.Services
 
         protected ActionResponse Execute(ActionBase command)
         {
-            var pipeProxy = CreateChannel(command.Timeout.TotalMilliseconds > 0 ? command.Timeout : BrowserService.DefaultTimeout);
+            if (command.Timeout.TotalMilliseconds == 0)
+                command.Timeout = BrowserService.DefaultTimeout;
+            var pipeProxy = CreateChannel(command.Timeout);
             var response = pipeProxy.Execute(command);
             return response;
         }
@@ -38,7 +38,7 @@ namespace G1ANT.Browser.Driver.Services
         {
             try
             {
-                var pipeProxy = CreateChannel(defaultTimeout);
+                var pipeProxy = CreateChannel(BrowserService.DefaultTimeout);
                 return pipeProxy.IsConnected();
             }
             catch (EndpointNotFoundException)

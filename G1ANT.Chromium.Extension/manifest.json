@@ -3,6 +3,13 @@
 	"version": "1.0",
 	"manifest_version": 3,
 	"description": "G1ANT.Studio extension for browser interaction.",
+	"icons": {
+		"16": "g1ant16.png",
+		"32": "g1ant32.png",
+		"48": "g1ant48.png",
+		"64": "g1ant64.png",
+		"128": "g1ant128.png"
+	},
 	"background": {
 		"service_worker": "background.js"
 	},
@@ -14,11 +21,9 @@
 		}
 	],
 	"permissions": [
-		"management",
+		//"management",
 		"nativeMessaging",
-		"tabs",
-		"webNavigation",
-		"scripting"
+		"tabs"
 	],
 	"host_permissions": [
 		"*://*/*"

@@ -1,4 +1,5 @@
-﻿using G1ANT.Chromium.Host.Data;
+﻿using G1ANT.Browser.Driver.Data;
+using G1ANT.Chromium.Host.Data;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -210,7 +211,16 @@ namespace G1ANT.Chromium.Host
                     return response;
             }
             while (Math.Abs(Environment.TickCount - start) < timeout.Value.TotalMilliseconds);
-            return null;
+            return new ChromiumCommandResponse()
+            {
+                Succeeded = false,
+                Data = JObject.FromObject(
+                    new ErrorResult() 
+                    { 
+                        Error = $"The operation has timed out (timeout={timeout.Value})."
+                    })
+
+            };
         }
 
     }

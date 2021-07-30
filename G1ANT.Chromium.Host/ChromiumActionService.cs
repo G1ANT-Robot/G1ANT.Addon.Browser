@@ -24,7 +24,7 @@ namespace G1ANT.Chrome.Host
                 Command = "ping"
             };
             host.SendMessage(msg.ToJson());
-            var response = host.WaitForCommandResponse(msg.Id, TimeSpan.FromSeconds(1));
+            var response = host.WaitForCommandResponse(msg.Id);
             if (response == null)
             {
                 return false;

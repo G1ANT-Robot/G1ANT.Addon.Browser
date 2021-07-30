@@ -32,7 +32,7 @@ namespace G1ANT.Browser.Driver.Data
         protected const string NameSuffix = "Action";
 
         [DataMember]
-        public TimeSpan Timeout = TimeSpan.FromSeconds(1);
+        public TimeSpan Timeout;
 
         public string CommandName
         {
@@ -44,11 +44,6 @@ namespace G1ANT.Browser.Driver.Data
                 return name; 
             }
         }
-
-        protected JsonSerializerSettings JsonSerializerSettings => new JsonSerializerSettings()
-        {
-           ContractResolver = new CamelCasePropertyNamesContractResolver()
-        };
 
         public string ToJson()
         {
