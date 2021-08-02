@@ -121,6 +121,10 @@
       <Project>{CE42A179-B0FF-40F4-A7C6-0D775917ACD8}</Project>
       <Name>G1ANT.Chrome.Driver</Name>
     </ProjectReference>
+    <ProjectReference Include="..\G1ANT.Chrome.Host\G1ANT.Chrome.Host.csproj">
+      <Project>{16dc44b2-e399-4bfc-87c8-8fbc9a0a9726}</Project>
+      <Name>G1ANT.Chrome.Host</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\G1ANT.Browser.Driver\bin\$(Configuration)\G1ANT.Browser.Driver.dll">
