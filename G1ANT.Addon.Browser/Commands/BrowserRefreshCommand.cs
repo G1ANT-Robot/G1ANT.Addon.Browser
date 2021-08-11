@@ -7,6 +7,7 @@
 *    See License.txt file in the project root for full license information.
 *
 */
+using G1ANT.Addon.Browser.Api;
 using G1ANT.Language;
 using System;
 
@@ -17,6 +18,8 @@ namespace G1ANT.Addon.Browser
     {
         public class Arguments : CommandArguments
         {
+            [Argument(DefaultVariable = "timeoutbrowser", Tooltip = "Specifies time in milliseconds for G1ANT.Robot to wait for the command to be executed")]
+            public override TimeSpanStructure Timeout { get; set; } = new TimeSpanStructure(BrowserSettings.Timeout);
         }
 
         public BrowserRefreshCommand(AbstractScripter scripter) : base(scripter)
@@ -25,7 +28,14 @@ namespace G1ANT.Addon.Browser
 
         public void Execute(Arguments arguments)
         {
-            throw new NotImplementedException();
+            try
+            {
+                BrowserManager.CurrentWrapper.Refresh(arguments.Timeout.Value);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"Error occured while refreshing browser instance. Message: {ex.Message}", ex);
+            }
         }
     }
 }

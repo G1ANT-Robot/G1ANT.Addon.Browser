@@ -8,6 +8,9 @@
 *
 */
 using G1ANT.Addon.Browser.Api;
+using G1ANT.Browser.Driver.Actions;
+using G1ANT.Browser.Driver.Data;
+using G1ANT.Chrome.Driver;
 using G1ANT.Language;
 using System;
 
@@ -35,7 +38,17 @@ namespace G1ANT.Addon.Browser
 
         public void Execute(Arguments arguments)
         {
-            throw new NotImplementedException();
+            try
+            {
+                BrowserManager.CurrentWrapper.NewTab(
+                    arguments.Url?.Value, 
+                    arguments.NoWait.Value, 
+                    arguments.Timeout.Value);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"Error occured while opening new tab. Url '{arguments.Url.Value}'. Message: {ex.Message}", ex);
+            }
         }
     }
 }

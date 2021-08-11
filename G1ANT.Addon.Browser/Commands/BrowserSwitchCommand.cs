@@ -7,6 +7,7 @@
 *    See License.txt file in the project root for full license information.
 *
 */
+using G1ANT.Addon.Browser.Api;
 using G1ANT.Language;
 using System;
 
@@ -27,7 +28,15 @@ namespace G1ANT.Addon.Browser
         
         public void Execute(Arguments arguments)
         {
-            throw new NotImplementedException();
+            try
+            {
+                BrowserManager.Switch(arguments.Id.Value);
+
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"Error occured while switching to another browser instance. Browser instance id: '{arguments.Id.Value}'. Message: {ex.Message}", ex);
+            }
         }
     }
 }

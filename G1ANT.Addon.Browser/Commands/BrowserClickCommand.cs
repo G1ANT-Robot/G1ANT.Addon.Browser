@@ -32,7 +32,15 @@ namespace G1ANT.Addon.Browser
         
         public void Execute(Arguments arguments)
         {
-            throw new NotImplementedException();
+            try
+            {
+                BrowserManager.CurrentWrapper.Click(arguments, arguments.Timeout.Value, arguments.WaitForNewWindow.Value);
+
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"Error occured while clicking element. Search element phrase: '{arguments.Search.Value}', by: '{arguments.By.Value}'. Message: {ex.Message}", ex);
+            }
         }
     }
 }

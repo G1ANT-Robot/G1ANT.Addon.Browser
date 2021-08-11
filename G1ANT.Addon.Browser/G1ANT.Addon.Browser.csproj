@@ -66,10 +66,12 @@
   <ItemGroup>
     <Compile Include="Api\BrowserCommandArguments.cs" />
     <Compile Include="Api\BrowserIFrameArguments.cs" />
+    <Compile Include="Api\BrowserManager.cs" />
     <Compile Include="Api\BrowserSettings.cs" />
+    <Compile Include="Api\BrowserWrapper.cs" />
+    <Compile Include="Api\Utils.cs" />
     <Compile Include="BrowserAddon.cs" />
     <Compile Include="Commands\BrowserActivateTabCommand.cs" />
-    <Compile Include="Commands\BrowserCallFunctionCommand.cs" />
     <Compile Include="Commands\BrowserClickCommand.cs" />
     <Compile Include="Commands\BrowserCloseCommand.cs" />
     <Compile Include="Commands\BrowserCloseTabCommand.cs" />
@@ -89,7 +91,6 @@
     <Compile Include="Commands\BrowserSetUrlCommand.cs" />
     <Compile Include="Commands\BrowserSwitchCommand.cs" />
     <Compile Include="Commands\BrowserTypeCommand.cs" />
-    <Compile Include="Commands\BrowserWaitForValueCommand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -102,7 +103,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="License.txt" />
+    <EmbeddedResource Include="License.txt" />
     <None Include="Resources\browsericon.png" />
   </ItemGroup>
   <ItemGroup>
@@ -111,6 +112,33 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\G1ANT.Browser.Driver\G1ANT.Browser.Driver.csproj">
+      <Project>{657783f4-9b67-44ad-8fc3-eaf708290237}</Project>
+      <Name>G1ANT.Browser.Driver</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\G1ANT.Chrome.Driver\G1ANT.Chrome.Driver.csproj">
+      <Project>{CE42A179-B0FF-40F4-A7C6-0D775917ACD8}</Project>
+      <Name>G1ANT.Chrome.Driver</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\G1ANT.Chrome.Host\G1ANT.Chrome.Host.csproj">
+      <Project>{16dc44b2-e399-4bfc-87c8-8fbc9a0a9726}</Project>
+      <Name>G1ANT.Chrome.Host</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\G1ANT.Browser.Driver\bin\$(Configuration)\G1ANT.Browser.Driver.dll">
+      <Link>G1ANT.Browser.Driver.dll</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\G1ANT.Chrome.Driver\bin\$(Configuration)\G1ANT.Chrome.Driver.dll">
+      <Link>G1ANT.Chrome.Driver.dll</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\G1ANT.Chrome.Host\bin\$(Configuration)\G1ANT.Chrome.Host.exe">
+      <Link>G1ANT.Chrome.Host.exe</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include=".\G1ANT.Addon.Browser.Starting.Extension.html">
+      <Link>G1ANT.Addon.Browser.Starting.Extension.html</Link>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

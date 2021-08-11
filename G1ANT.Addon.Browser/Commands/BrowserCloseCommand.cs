@@ -7,6 +7,7 @@
 *    See License.txt file in the project root for full license information.
 *
 */
+using G1ANT.Addon.Browser.Api;
 using G1ANT.Language;
 using System;
 
@@ -25,7 +26,15 @@ namespace G1ANT.Addon.Browser
         
         public void Execute(Arguments arguments)
         {
-            throw new NotImplementedException();
+            try
+            {
+                BrowserManager.QuitCurrentWrapper();
+
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"Error occured while closing browser instance. Message: {ex.Message}", ex);
+            }
         }
     }
 }

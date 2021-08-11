@@ -28,7 +28,14 @@ namespace G1ANT.Addon.Browser
         
         public void Execute(Arguments arguments)
         {
-            throw new NotImplementedException();
+            try
+            {
+                BrowserManager.CurrentWrapper.CloseTab(arguments.Timeout.Value);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"Error occured while closing current tab. Message: {ex.Message}", ex);
+            }
         }
     }
 }

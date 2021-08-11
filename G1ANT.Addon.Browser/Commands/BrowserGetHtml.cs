@@ -32,7 +32,18 @@ namespace G1ANT.Addon.Browser
 
         public void Execute(Arguments arguments)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var attributeValue = BrowserManager.CurrentWrapper.GetHtml(
+                    arguments,
+                    arguments.Timeout.Value);
+
+                Scripter.Variables.SetVariableValue(arguments.Result.Value, new HtmlStructure(attributeValue));
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"Unable to get Html web source. Message: {ex.Message}", ex);
+            }
         }
     }
 }

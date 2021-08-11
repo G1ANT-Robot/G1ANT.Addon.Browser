@@ -35,7 +35,19 @@ namespace G1ANT.Addon.Browser
         
         public void Execute(Arguments arguments)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var attributeValue = BrowserManager.CurrentWrapper.GetAttributeValue(
+                    arguments,
+                    arguments.Name.Value,
+                    arguments.Timeout.Value);
+
+                Scripter.Variables.SetVariableValue(arguments.Result.Value, new TextStructure(attributeValue));
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException($"Error occured while getting '{arguments.Name.Value}' attribute. Search element phrase: '{arguments.Search.Value}', by: '{arguments.By.Value}'. Message: {ex.Message}", ex);
+            }
         }
     }
 }

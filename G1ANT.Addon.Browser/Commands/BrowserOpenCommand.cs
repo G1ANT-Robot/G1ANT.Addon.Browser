@@ -9,8 +9,6 @@
 */
 using G1ANT.Addon.Browser.Api;
 using G1ANT.Language;
-using System;
-using System.Collections.Generic;
 
 namespace G1ANT.Addon.Browser
 {
@@ -41,7 +39,17 @@ namespace G1ANT.Addon.Browser
 
         public void Execute(Arguments arguments)
         {
-            throw new NotImplementedException();
+            var wrapper = BrowserManager.CreateWrapper(
+                arguments.Type.Value,
+                arguments.Url.Value,
+                arguments.Timeout.Value,
+                arguments.NoWait.Value);
+            int wrapperId = wrapper.Id;
+            OnScriptEnd = () =>
+            {
+                BrowserManager.RemoveWrapper(wrapperId);
+            };
+            Scripter.Variables.SetVariableValue(arguments.Result.Value, new IntegerStructure(wrapper.Id));
         }
     }
 }

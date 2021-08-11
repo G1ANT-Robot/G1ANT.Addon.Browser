@@ -4,6 +4,28 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 16.0.31321.278
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "G1ANT.Addon.Browser", "G1ANT.Addon.Browser\G1ANT.Addon.Browser.csproj", "{5CB59F51-7F27-4612-B240-06FFC108B924}"
+	ProjectSection(ProjectDependencies) = postProject
+		{16DC44B2-E399-4BFC-87C8-8FBC9A0A9726} = {16DC44B2-E399-4BFC-87C8-8FBC9A0A9726}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "G1ANT.Chrome.Host", "G1ANT.Chrome.Host\G1ANT.Chrome.Host.csproj", "{16DC44B2-E399-4BFC-87C8-8FBC9A0A9726}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "G1ANT.Chromium.Host", "G1ANT.Chromium.Host\G1ANT.Chromium.Host.csproj", "{6E14C729-805A-4600-8570-729937DE93C6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "G1ANT.Chromium.Extension", "G1ANT.Chromium.Extension", "{B95C2B49-246F-4F00-817E-2CBF728E5A7C}"
+	ProjectSection(SolutionItems) = preProject
+		G1ANT.Chromium.Extension\background.js = G1ANT.Chromium.Extension\background.js
+		G1ANT.Chromium.Extension\background_cmds.js = G1ANT.Chromium.Extension\background_cmds.js
+		G1ANT.Chromium.Extension\config.js = G1ANT.Chromium.Extension\config.js
+		G1ANT.Chromium.Extension\content.js = G1ANT.Chromium.Extension\content.js
+		G1ANT.Chromium.Extension\content_cmds.js = G1ANT.Chromium.Extension\content_cmds.js
+		G1ANT.Chromium.Extension\manifest.json = G1ANT.Chromium.Extension\manifest.json
+		G1ANT.Chromium.Extension\utils.js = G1ANT.Chromium.Extension\utils.js
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "G1ANT.Browser.Driver", "G1ANT.Browser.Driver\G1ANT.Browser.Driver.csproj", "{657783F4-9B67-44AD-8FC3-EAF708290237}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "G1ANT.Chrome.Driver", "G1ANT.Chrome.Driver\G1ANT.Chrome.Driver.csproj", "{CE42A179-B0FF-40F4-A7C6-0D775917ACD8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +37,22 @@ Global
 		{5CB59F51-7F27-4612-B240-06FFC108B924}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5CB59F51-7F27-4612-B240-06FFC108B924}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5CB59F51-7F27-4612-B240-06FFC108B924}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16DC44B2-E399-4BFC-87C8-8FBC9A0A9726}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16DC44B2-E399-4BFC-87C8-8FBC9A0A9726}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16DC44B2-E399-4BFC-87C8-8FBC9A0A9726}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16DC44B2-E399-4BFC-87C8-8FBC9A0A9726}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E14C729-805A-4600-8570-729937DE93C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E14C729-805A-4600-8570-729937DE93C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E14C729-805A-4600-8570-729937DE93C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E14C729-805A-4600-8570-729937DE93C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{657783F4-9B67-44AD-8FC3-EAF708290237}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{657783F4-9B67-44AD-8FC3-EAF708290237}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{657783F4-9B67-44AD-8FC3-EAF708290237}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{657783F4-9B67-44AD-8FC3-EAF708290237}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE42A179-B0FF-40F4-A7C6-0D775917ACD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE42A179-B0FF-40F4-A7C6-0D775917ACD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE42A179-B0FF-40F4-A7C6-0D775917ACD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE42A179-B0FF-40F4-A7C6-0D775917ACD8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
