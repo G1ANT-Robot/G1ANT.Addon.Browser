@@ -85,7 +85,6 @@
     <Compile Include="Commands\BrowserGetUrlCommand.cs" />
     <Compile Include="Commands\BrowserNewTabCommand.cs" />
     <Compile Include="Commands\BrowserOpenCommand.cs" />
-    <Compile Include="Commands\BrowserPressKeyCommand.cs" />
     <Compile Include="Commands\BrowserRefreshCommand.cs" />
     <Compile Include="Commands\BrowserSetAttributeCommand.cs" />
     <Compile Include="Commands\BrowserSetUrlCommand.cs" />

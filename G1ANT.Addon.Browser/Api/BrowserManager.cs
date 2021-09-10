@@ -49,7 +49,20 @@ namespace G1ANT.Addon.Browser.Api
             }
         }
 
-        private static IBrowserDriver GetBrowserDriver(string webBrowserName)
+        private static BrowserWrapper CreateChromeWrapper()
+        {
+            var wrapper = wrappers.Where(x => x.Driver is ChromeClient).FirstOrDefault();
+            if (wrapper == null)
+            {
+                var driverService = ChromeService.CreateService();
+                driverService.StartingExtensionHtmlUrl = GetStartingExtensionHtmlPath();
+                wrapper = new BrowserWrapper(new ChromeClient(driverService));
+                wrappers.Add(wrapper);
+            }
+            return wrapper;
+        }
+
+        private static BrowserWrapper CreateBrowserWrapper(string webBrowserName)
         {
             switch (webBrowserName.ToLower())
             {
@@ -58,11 +71,7 @@ namespace G1ANT.Addon.Browser.Api
                 case "internetexplorer":
                     break;
                 case "chrome":
-                    {
-                        var driverService = ChromeService.CreateService();
-                        driverService.StartingExtensionHtmlUrl = GetStartingExtensionHtmlPath();
-                        return new ChromeClient(driverService);
-                    }
+                    return CreateChromeWrapper();
                 case "firefox":
                 case "ff":
                     break;
@@ -74,7 +83,7 @@ namespace G1ANT.Addon.Browser.Api
 
         public static BrowserWrapper CreateWrapper(string webBrowserName, string url, TimeSpan timeout, bool noWait)
         {
-            BrowserWrapper wrapper = new BrowserWrapper(GetBrowserDriver(webBrowserName));
+            var wrapper = CreateBrowserWrapper(webBrowserName);
             CurrentWrapper = wrapper;
             if (!string.IsNullOrEmpty(url))
             {

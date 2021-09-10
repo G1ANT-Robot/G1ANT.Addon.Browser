@@ -40,7 +40,7 @@ function ProcessMessage(message) {
 }
 
 function ProcessActiveTab(successCallback, failedCallback) {
-	chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+	chrome.tabs.query({ active: true, lastFocusedWindow: true }, (tabs) => {
 		if (tabs === undefined || tabs.length == 0) {
 			failedCallback("Cannot find active tab.");
 		}

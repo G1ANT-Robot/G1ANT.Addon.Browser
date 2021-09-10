@@ -9,14 +9,14 @@ namespace G1ANT.Addon.Browser.Api
     {
         private static int _idcounter = 0;
 
-        private IBrowserDriver driver;
+        public IBrowserDriver Driver { get; private set; }
 
         public int Id { get; private set; }
 
         public BrowserWrapper(IBrowserDriver driver)
         {
             Id = ++_idcounter;
-            this.driver = driver;
+            this.Driver = driver;
         }
 
         public void OpenUrl(string url, TimeSpan timeout, bool noWait)
@@ -27,7 +27,7 @@ namespace G1ANT.Addon.Browser.Api
                 Url = url,
                 NoWait = noWait
             };
-            driver.Open(action);
+            Driver.Open(action);
         }
 
         public void SetUrl(string url, TimeSpan timeout, bool noWait)
@@ -38,7 +38,7 @@ namespace G1ANT.Addon.Browser.Api
                 Url = url,
                 NoWait = noWait
             };
-            driver.SetUrl(action);
+            Driver.SetUrl(action);
         }
 
         public void Refresh(TimeSpan timeout)
@@ -48,7 +48,7 @@ namespace G1ANT.Addon.Browser.Api
                 BypassCache = false,
                 Timeout = timeout
             };
-            driver.Refresh(action);
+            Driver.Refresh(action);
         }
 
         public void CloseTab(TimeSpan timeout)
@@ -57,7 +57,7 @@ namespace G1ANT.Addon.Browser.Api
             {
                 Timeout = timeout
             };
-            driver.CloseTab(action);
+            Driver.CloseTab(action);
         }
 
         public void NewTab(string url, bool noWait, TimeSpan timeout)
@@ -68,7 +68,7 @@ namespace G1ANT.Addon.Browser.Api
                 Url = url,
                 NoWait = noWait
             };
-            driver.NewTab(action);
+            Driver.NewTab(action);
         }
 
         public void ActivateTab(string phrase, string by, TimeSpan timeout)
@@ -79,7 +79,7 @@ namespace G1ANT.Addon.Browser.Api
                 By = by,
                 Timeout = timeout
             };
-            driver.ActivateTab(action);
+            Driver.ActivateTab(action);
         }
 
         public void Click(BrowserCommandArguments search, TimeSpan timeout, bool waitForNewWindow = false)
@@ -90,7 +90,7 @@ namespace G1ANT.Addon.Browser.Api
                 By = search.By.Value,
                 Timeout = timeout
             };
-            driver.Click(action);
+            Driver.Click(action);
         }
 
         public void TypeText(BrowserCommandArguments search, string text, TimeSpan timeout)
@@ -102,7 +102,7 @@ namespace G1ANT.Addon.Browser.Api
                 Text = text,
                 Timeout = timeout
             };
-            driver.TypeText(action);
+            Driver.TypeText(action);
         }
 
         public void PressKey(BrowserCommandArguments search, string keyText, TimeSpan timeout)
@@ -114,7 +114,7 @@ namespace G1ANT.Addon.Browser.Api
                 Key = keyText,
                 Timeout = timeout
             };
-            driver.PressKey(action);
+            Driver.PressKey(action);
         }
 
         public void SetAttributeValue(BrowserCommandArguments search, string attributeName, string attributeValue, TimeSpan timeout)
@@ -127,7 +127,7 @@ namespace G1ANT.Addon.Browser.Api
                 Value = attributeValue,
                 Timeout = timeout
             };
-            driver.SetAttribute(action);
+            Driver.SetAttribute(action);
         }
 
         public string GetAttributeValue(BrowserCommandArguments search, string attributeName, TimeSpan timeout)
@@ -139,7 +139,7 @@ namespace G1ANT.Addon.Browser.Api
                 Name = attributeName,
                 Timeout = timeout
             };
-            return driver.GetAttribute(action);
+            return Driver.GetAttribute(action);
         }
 
         public string GetHtml(BrowserIFrameArguments search, TimeSpan timeout)
@@ -148,7 +148,7 @@ namespace G1ANT.Addon.Browser.Api
             {
                 Timeout = timeout
             };
-            return driver.GetHtml(action);
+            return Driver.GetHtml(action);
         }
 
         public string GetInnerHtml(BrowserCommandArguments search, TimeSpan timeout)
@@ -159,7 +159,7 @@ namespace G1ANT.Addon.Browser.Api
                 By = search.By.Value,
                 Timeout = timeout
             };
-            return driver.GetInnerHtml(action);
+            return Driver.GetInnerHtml(action);
         }
 
         public string GetOuterHtml(BrowserCommandArguments search, TimeSpan timeout)
@@ -170,7 +170,7 @@ namespace G1ANT.Addon.Browser.Api
                 By = search.By.Value,
                 Timeout = timeout
             };
-            return driver.GetOuterHtml(action);
+            return Driver.GetOuterHtml(action);
         }
 
         public string GetTextValue(BrowserCommandArguments search, TimeSpan timeout)
@@ -181,7 +181,7 @@ namespace G1ANT.Addon.Browser.Api
                 By = search.By.Value,
                 Timeout = timeout
             };
-            return driver.GetText(action);
+            return Driver.GetText(action);
         }
 
         public BrowserTab GetActiveTab(TimeSpan timeout)
@@ -190,7 +190,7 @@ namespace G1ANT.Addon.Browser.Api
             {
                 Timeout = timeout
             };
-            return driver.GetActiveTab(action);
+            return Driver.GetActiveTab(action);
         }
     }
 }
