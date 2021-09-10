@@ -6,6 +6,7 @@ namespace G1ANT.Browser.Driver.Services
 {
     public abstract class BrowserClientBase<T> 
     {
+        private const int maxBufferSize = 50 * 1024 * 1024;
         protected abstract string ServerName { get; }
         protected string ServerEndpoint => $"net.pipe://localhost/{ServerName}/{typeof(T).ServiceContract_Name()}";
 
@@ -13,7 +14,10 @@ namespace G1ANT.Browser.Driver.Services
         {
             var binding = new NetNamedPipeBinding()
             {
-                SendTimeout = timeout
+                SendTimeout = timeout,
+                MaxBufferSize = maxBufferSize,
+                MaxReceivedMessageSize = maxBufferSize,
+                MaxBufferPoolSize = maxBufferSize
             };
 
             ChannelFactory<T> pipeFactory = null;

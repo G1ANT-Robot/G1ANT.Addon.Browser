@@ -11,6 +11,7 @@ namespace G1ANT.Browser.Driver.Services
 {
     public abstract class DriverServer<ServiceT, ContractT> : IDisposable
     {
+        private const int maxBufferSize = 50 * 1024 * 1024;
         protected ServiceHost host;
         public ServiceT Service { get; private set; }
         protected abstract string ServerName { get; }
@@ -30,7 +31,13 @@ namespace G1ANT.Browser.Driver.Services
             var serverUrl = $"net.pipe://localhost/{ServerName}";
             host = new ServiceHost(Service, new Uri(serverUrl));
 
-            var binding = new NetNamedPipeBinding();
+            var binding = new NetNamedPipeBinding()
+            {
+                MaxBufferSize = maxBufferSize,
+                MaxReceivedMessageSize = maxBufferSize,
+                MaxBufferPoolSize = maxBufferSize,
+            };
+            binding.ReaderQuotas.MaxStringContentLength = maxBufferSize;
             var commandExecutorContract = typeof(ContractT);
             host.AddServiceEndpoint(
                 commandExecutorContract,
