@@ -40,9 +40,16 @@ function GetErrorResult(errorMsg) {
 }
 
 function GetTabResult(tab) {
-	return { "Id": tab.id, "Url": tab.url, "Title": tab.title, "Status": tab.status };
+	return {
+		"Id": tab.id,
+		"Url": tab.url,
+		"Title": tab.title,
+		"Status": tab.status
+	};
 }
 
 function GetValueResult(value) {
-	return { "Value": value };
+	return {
+		"Value": value
+	};
 }

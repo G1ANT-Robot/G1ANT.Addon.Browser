@@ -1,6 +1,7 @@
 importScripts("content_cmds.js", "utils.js");
 
 var g1antCommands = new Object();
+var g1antExtensionVersion = "1.0"
 
 function SendCommandResponse(message, succeeded, data) {
 	nativeMessaging.SendMessage("commandResponse", { 
@@ -15,54 +16,61 @@ function ProcessMessage(message) {
 	var command = g1antCommands[message.Command];
 	console.log("Processing command: " + message.Command);
 	if (command !== undefined) {
-		command(message, (succeeded, data) => {
-			SendCommandResponse(message, succeeded, data);
-		});
+		command(message)
+			.then((result) => {
+				SendCommandResponse(message, true, result);
+			})
+			.catch((error) => {
+				SendCommandResponse(message, false, GetErrorResult(error));
+			});
 		processed = true;
 	} 
 	else {
 		var command = g1ContentCommands[message.Command];
 		if (command !== undefined) {
-			ProcessActiveTab(
-				(tab) => {
-					chrome.tabs.sendMessage(tab.id, message, (succeeded, data) => {
-						SendCommandResponse(message, succeeded, data);
+			FindActiveTab()
+				.then((tab) => {
+					chrome.tabs.sendMessage(tab.id, message, (response) => {
+						SendCommandResponse(message, response.succeeded, response.data);
 					});
-				},
-				(errorMsg) => {
-					SendCommandResponse(message, false, GetErrorResult(errorMsg));
-				}
-			);
+				})
+				.catch((error) => {
+					SendCommandResponse(message, false, GetErrorResult(error));
+				});
 			processed = true;
 		} 
 	}
 	return processed;
 }
 
-function ProcessActiveTab(successCallback, failedCallback) {
-	chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-		if (tabs === undefined || tabs.length == 0) {
-			failedCallback("Cannot find active tab.");
-		}
-		else if (tabs.length == 1) {
-			successCallback(tabs[0]);
-		}
-		else {
-			failedCallback("More than one tab are active.");
-		}
-	});
+function FindActiveTab() {
+	return chrome.tabs.query({ active: true, lastFocusedWindow: true })
+		.then((tabs) => {
+			if (tabs === undefined || tabs.length == 0) {
+				throw ("Cannot find active tab.");
+			}
+			else if (tabs.length == 1) {
+				return (tabs[0]);
+			}
+			else {
+				throw ("More than one tab are active.");
+			}
+		});
 }
 
-function GetSearchQueryFromArgs(args, responseCallback) {
-	switch (args.By.toLowerCase()) {
-		case "title":
-			return { title: args.Search };
-		case "url":
-			return { url: NormalizeSearchQueryUrl(args.Search) };
-		default:
-			responseCallback(false, GetErrorResult("by argument is not recognized."));
-			return false;
-	}
+function GetSearchQueryFromArgs(args) {
+	return new Promise((resolve, reject) => {
+		switch (args.By.toLowerCase()) {
+			case "title":
+				resolve({ title: args.Search });
+				break;
+			case "url":
+				resolve({ url: NormalizeSearchQueryUrl(args.Search) });
+				break;
+			default:
+				throw "by argument is not recognized.";
+		}
+	});
 }
 
 function NormalizeSearchQueryUrl(searchQuery) {
@@ -83,126 +91,108 @@ function NormalizeSearchQueryUrl(searchQuery) {
 	return result;
 }
 
-function WaitToCompleteTabLoading(tabToWait, responseCallback) {
-	chrome.tabs.onUpdated.addListener(function TabUpdated(tabId, changeInfo, tab) {
-		if (tab.id === tabToWait.id && tab.status === "complete") {
-			chrome.tabs.onUpdated.removeListener(TabUpdated);
-			responseCallback(true, GetTabResult(tab));
-		}
+function WaitToCompleteTabLoading(tabToWait) {
+	return new Promise((resolve, reject) => {
+		chrome.tabs.onUpdated.addListener(function TabUpdated(tabId, changeInfo, tab) {
+			if (tab.id === tabToWait.id && tab.status === "complete") {
+				chrome.tabs.onUpdated.removeListener(TabUpdated);
+				resolve(GetTabResult(tab));
+			}
+		});
 	});
 }
 
-g1antCommands["newtab"] = function (message, responseCallback) {
-	chrome.tabs.create({
-		url: NormalizeUrl(message.Args.Url)
-	}, function(createdTab) {
-		if (message.Args.NoWait === true) {
-			responseCallback(true, GetTabResult(tab));
-		}
-		else {
-			WaitToCompleteTabLoading(createdTab, responseCallback);
-		}
-	});
+g1antCommands["newtab"] = function (message) {
+	return chrome.tabs.create({ url: NormalizeUrl(message.Args.Url) })
+		.then((createdTab) => {
+			if (message.Args.NoWait === true) {
+				return GetTabResult(tab);
+			}
+			else {
+				return WaitToCompleteTabLoading(createdTab);
+			}
+		});
 };
 
-g1antCommands["findtab"] = function (message, responseCallback) {
-	var searchQuery = GetSearchQueryFromArgs(message.Args, responseCallback);
-	if (searchQuery !== false) {
-		chrome.tabs.query(searchQuery, (tabs) => {
-			if (tabs === undefined || tabs.length == 0) {
-				responseCallback(false, GetErrorResult("Cannot find tab meets search criteria."));
-			}
-			else if (tabs.length == 1) {
-				console.log("findtab: found");
-				responseCallback(true, GetTabResult(tab));
-			}
-			else {
-				responseCallback(false, GetErrorResult("More than one tab meets search criteria."));
-			}
-		});
-	}
-}
-
-g1antCommands["activatetab"] = function (message, responseCallback) {
-	var searchQuery = GetSearchQueryFromArgs(message.Args, responseCallback);
-	if (searchQuery !== false) {
-		chrome.tabs.query(searchQuery, (tabs) => {
-			if (tabs === undefined || tabs.length == 0) {
-				responseCallback(false, GetErrorResult("Cannot find tab meets search criteria."));
-			}
-			else if (tabs.length == 1) {
-				chrome.tabs.update(tabs[0].id, { active: true }, (tab) => {
-					responseCallback(true, GetTabResult(tab));
-				});
-			}
-			else {
-				responseCallback(false, GetErrorResult("More than one tab meets search criteria."));
-			}
-		});
-	}
-}
-
-g1antCommands["closetab"] = function (message, responseCallback) {
-	if (message.Args.TabId === undefined || message.Args.TabId == null) {
-		ProcessActiveTab(
-			(tab) => {
-				chrome.tabs.remove(tab.id, () => {
-					responseCallback(true, null);
-				});
-			},
-			(errorMsg) => {
-				responseCallback(false, GetErrorResult(errorMsg));
-			}
+g1antCommands["findtab"] = function (message) {
+	return GetSearchQueryFromArgs(message.Args)
+		.then((searchQuery) =>
+			chrome.tabs.query(searchQuery)
+				.then((tabs) => {
+					if (tabs === undefined || tabs.length == 0)
+						throw "Cannot find tab meets search criteria.";
+					else if (tabs.length == 1)
+						return GetTabResult(tab);
+					else
+						throw "More than one tab meets search criteria.";
+				})
 		);
+}
+
+g1antCommands["activatetab"] = function (message) {
+	return GetSearchQueryFromArgs(message.Args)
+		.then((searchQuery) =>
+			chrome.tabs.query(searchQuery)
+				.then((tabs) => {
+					if (tabs === undefined || tabs.length == 0)
+						throw "Cannot find tab meets search criteria.";
+					else if (tabs.length == 1)
+						return chrome.tabs.update(tabs[0].id, { active: true })
+							.then((tab) => GetTabResult(tab));
+					else
+						throw "More than one tab meets search criteria.";
+				})
+		);
+}
+
+g1antCommands["closetab"] = function (message) {
+	if (message.Args.TabId === undefined || message.Args.TabId == null) {
+		return FindActiveTab()
+			.then((tab) => chrome.tabs.remove(tab.id)
+				.then(() => { return GetTabResult(tab); })
+			)
 	} else {
-		chrome.tabs.remove(Number(message.Args.TabId), () => {
-			responseCallback(true, null);
+		var tabId = parseInt(message.Args.TabId);
+		return chrome.tabs.get(tabId)
+			.then((tab) => {
+				return chrome.tabs.remove(tabId)
+					.then(() => { return GetTabResult(tab); })
+			});
+	}
+}
+
+g1antCommands["getactivetab"] = function (message) {
+	return FindActiveTab()
+		.then((tab) => {
+			return (GetTabResult(tab));
 		});
-    }
 }
 
-g1antCommands["getactivetab"] = function(message, responseCallback) {
-	ProcessActiveTab(
-		(tab) => {
-			responseCallback(true, GetTabResult(tab));
-		},
-		(errorMsg) => {
-			responseCallback(false, GetErrorResult(errorMsg));
-		}
-	);
+g1antCommands["refresh"] = function(message) {
+	return FindActiveTab()
+		.then((tab) => {
+			chrome.tabs.reload(tab.id, { bypassCache: message.Args.BypassCache })
+				.then(() => GetTabResult(tab))
+		})
 }
 
-g1antCommands["refresh"] = function(message, responseCallback) {
-	ProcessActiveTab(
-		(tab) => {
-			chrome.tabs.reload(tab.id, { bypassCache: message.Args.BypassCache }, () => {
-				responseCallback(true, GetTabResult(tab));
-			});
-		},
-		(errorMsg) => {
-			responseCallback(false, GetErrorResult(errorMsg));
-		}
-	);
+g1antCommands["seturl"] = function(message) {
+	return FindActiveTab()
+		.then((tab) => {
+			chrome.tabs.update(tab.id, { url: NormalizeUrl(message.Args.Url) })
+				.then((tab) => {
+					if (message.Args.NoWait === true) {
+						return GetTabResult(tab);
+					}
+					else {
+						return WaitToCompleteTabLoading(tab);
+					}
+				});
+		})
 }
 
-g1antCommands["seturl"] = function(message, responseCallback) {
-	ProcessActiveTab(
-		(tab) => {
-			chrome.tabs.update(tab.id, { url: NormalizeUrl(message.Args.Url) }, (tab) => {
-				if (message.Args.NoWait === true) {
-					responseCallback(true, GetTabResult(tab));
-				}
-				else {
-					WaitToCompleteTabLoading(tab, responseCallback);
-				}
-			});
-		},
-		(errorMsg) => {
-			responseCallback(false, GetErrorResult(errorMsg));
-		}
-	);
-}
-
-g1antCommands["ping"] = function(message, responseCallback) {
-	responseCallback(true, null);
+g1antCommands["ping"] = function (message) {
+	return new Promise((resolve, reject) => {
+		resolve(GetValueResult(g1antExtensionVersion));
+	});
 }

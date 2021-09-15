@@ -8,13 +8,26 @@ chrome.runtime.onMessage.addListener(function (message, sender, responseCallback
 		if (message.Command !== undefined) {
 			var command = g1ContentCommands[message.Command];
 			if (command !== undefined) {
-				command(message.Args, responseCallback);
+				command(message.Args)
+					.then((result) => {
+						responseCallback(GetContentResponse(true, result));
+					})
+					.catch((error) => {
+						responseCallback(GetContentResponse(false, GetErrorResult(error)));
+					});
 			}
 			else {
-				responseCallback(false, { "error": "Command is not implemented" });
+				responseCallback(false, GetErrorResult("Command is not implemented"));
 			}
 		}
 	}
+	return true;
 });
 
+function GetContentResponse(succeeded, data) {
+	return {
+		"succeeded": succeeded,
+		"data": data
+	};
+}
 

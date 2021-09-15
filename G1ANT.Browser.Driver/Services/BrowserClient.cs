@@ -180,7 +180,7 @@ namespace G1ANT.Browser.Driver.Services
             return JsonConvert.DeserializeObject<BrowserTab>(result);
         }
 
-        public void TypeText(TypeTextAction action)
+        public void SetFocus(SetFocusAction action)
         {
             ProcessAction(action);
         }

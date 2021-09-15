@@ -26,7 +26,7 @@ namespace G1ANT.Browser.Driver.Data
     [KnownType(typeof(RefreshAction))]
     [KnownType(typeof(SetAttributeAction))]
     [KnownType(typeof(SetUrlAction))]
-    [KnownType(typeof(TypeTextAction))]
+    [KnownType(typeof(SetFocusAction))]
     public class ActionBase
     {
         protected const string NameSuffix = "Action";
