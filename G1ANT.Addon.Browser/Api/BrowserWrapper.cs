@@ -1,6 +1,7 @@
 ﻿using G1ANT.Browser.Driver.Actions;
 using G1ANT.Browser.Driver.Data;
 using G1ANT.Browser.Driver.Interfaces;
+using G1ANT.Language;
 using System;
 
 namespace G1ANT.Addon.Browser.Api
@@ -93,16 +94,15 @@ namespace G1ANT.Addon.Browser.Api
             Driver.Click(action);
         }
 
-        public void TypeText(BrowserCommandArguments search, string text, TimeSpan timeout)
+        public void SetFocus(BrowserCommandArguments search, TimeSpan timeout)
         {
-            var action = new TypeTextAction()
+            var action = new SetFocusAction()
             {
                 Search = search.Search.Value,
                 By = search.By.Value,
-                Text = text,
                 Timeout = timeout
             };
-            Driver.TypeText(action);
+            Driver.SetFocus(action);
         }
 
         public void PressKey(BrowserCommandArguments search, string keyText, TimeSpan timeout)

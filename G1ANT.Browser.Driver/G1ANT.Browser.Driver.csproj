@@ -64,7 +64,7 @@
     <Compile Include="Data\ErrorResult.cs" />
     <Compile Include="Actions\SetAttributeAction.cs" />
     <Compile Include="Actions\SetUrlAction.cs" />
-    <Compile Include="Actions\TypeTextAction.cs" />
+    <Compile Include="Actions\SetFocusAction.cs" />
     <Compile Include="Data\ValueModel.cs" />
     <Compile Include="Interfaces\IBrowserAction.cs" />
     <Compile Include="Data\ActionBase.cs" />

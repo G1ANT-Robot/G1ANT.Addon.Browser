@@ -33,10 +33,20 @@ namespace G1ANT.Addon.Browser
         {
             try
             {
-                BrowserManager.CurrentWrapper.TypeText(
+                int timeout = (int)arguments.Timeout.Value.TotalMilliseconds;
+
+                BrowserManager.CurrentWrapper.SetFocus(
                     arguments,
-                    arguments.Text.Value,
                     arguments.Timeout.Value);
+
+                KeyboardTyper.TypeWithSendInput(arguments.Text.Value,
+                    null,
+                    null,
+                    Scripter.LastWindow,
+                    timeout,
+                    true,
+                    50,
+                    Scripter);
             }
             catch (Exception ex)
             {

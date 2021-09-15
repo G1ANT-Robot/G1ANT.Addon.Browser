@@ -20,7 +20,7 @@ namespace G1ANT.Browser.Driver.Interfaces
         BrowserTab Refresh(RefreshAction action);
         void SetAttribute(SetAttributeAction action);
         BrowserTab SetUrl(SetUrlAction action);
-        void TypeText(TypeTextAction action);
+        void SetFocus(SetFocusAction action);
         void PressKey(PressKeyAction action);
     }
 }
